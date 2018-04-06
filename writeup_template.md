@@ -35,6 +35,9 @@ The goals / steps of this project are the following:
 [image18]: ./traffic-signs/13.jpg "Traffic Sign 13"
 [image19]: ./traffic-signs/14.jpg "Traffic Sign 14"
 [image20]: ./traffic-signs/15.jpg "Traffic Sign 15"
+[image21]: ./examples/visualize_cnn_untrained_15.jpg "Untrained Feature Map"
+[image22]: ./examples/visualize_cnn_15.jpg "Trained Feature Map"
+[image23]: ./examples/visualize_cnn_12.jpg "Trained Feature Map With Missing Feature"
 
 ---
 
@@ -473,7 +476,7 @@ Similarly for third image also model has very low confidence that this is a gene
 
 Here one thing noticeable is that model has more or less equal score for the right of way at the next intersection sign as second most probable prediction. In fact these two signs are very much equal to each other graphically.
 
-So it is safe to say that model is capable of handling cases where traffic sign is considerably covered with other objects. However we can see that confidence of the model is very low in such situations (It's quite amusing to see for the second image, model has come up with bumpy road as the 3rd guess which indeed would be the case with road works. And infact road work sign contains a similar symbol to bumpy road symbol as part of it.)
+So it is safe to say that model is capable of handling cases where traffic sign is considerably covered with other objects. However we can see that confidence of the model is very low in such situations (It's quite amusing to see for the second image, model has come up with bumpy road as the 3rd guess which indeed would be the case with road works. And in fact road work sign contains a similar symbol to bumpy road symbol as part of it.)
 
 
 However at this stage it should be stressed that the uncertainty of model predictions are due to the features of traffic sign being partially covered. Where as model can confidently predict when traffic sign is more clear.
@@ -580,4 +583,19 @@ As mentioned before convolutional neural networks are robust to rotations or tra
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 #### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
 
+Following image shows convolutional layer 1 activations of the DenseNet part of the model before and after training.
+ 
+Untrained network:  
+![visualization_cnn_untrained_15.jpg][image21]
+ 
+Trained network:  
+![visualization_cnn_15.jpg][image22]
 
+From these visualizations it seems that neural network use some specific features in the images like color band around the traffic sign (For example see feature map 7) as well as some higher dimensional features comprising of parts of simple shapes and features represent in images. (For example see feature map 22)
+
+When a particular feature from an image is not present, model could still perform with the remaining features of the image. For example when outer band of the above traffic sign is not present due to aging, the layers that solely depend on that feature seem to get less excited (For example see feature 7) where as layers that either works as a combination of features or layers containing other features would contribute to make the model more robust. (For example see feature map 8, 9 and 18)
+
+Trained network with a feature missing:  
+![visualization_cnn_12.jpg][image23]
+
+However it should be noted that it's quite hard to explain how or why a neural network works with very complex models and images. Above is based on best explanation based on observations of the visualization of network.
