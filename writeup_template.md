@@ -38,6 +38,23 @@ The goals / steps of this project are the following:
 [image21]: ./examples/visualize_cnn_untrained_15.jpg "Untrained Feature Map"
 [image22]: ./examples/visualize_cnn_15.jpg "Trained Feature Map"
 [image23]: ./examples/visualize_cnn_12.jpg "Trained Feature Map With Missing Feature"
+[image24]: ./examples/precision.jpg "Precision"
+[image25]: ./examples/recall.jpg "Recall"
+[image26]: ./top_k_predictions/1.jpg "Predictions 1"
+[image27]: ./top_k_predictions/2.jpg "Predictions 2"
+[image28]: ./top_k_predictions/3.jpg "Predictions 3"
+[image29]: ./top_k_predictions/4.jpg "Predictions 4"
+[image30]: ./top_k_predictions/5.jpg "Predictions 5"
+[image31]: ./top_k_predictions/6.jpg "Predictions 6"
+[image32]: ./top_k_predictions/7.jpg "Predictions 7"
+[image33]: ./top_k_predictions/8.jpg "Predictions 8"
+[image34]: ./top_k_predictions/9.jpg "Predictions 9"
+[image35]: ./top_k_predictions/10.jpg "Predictions 10"
+[image36]: ./top_k_predictions/11.jpg "Predictions 11"
+[image37]: ./top_k_predictions/12.jpg "Predictions 12"
+[image38]: ./top_k_predictions/13.jpg "Predictions 13"
+[image39]: ./top_k_predictions/14.jpg "Predictions 14"
+[image40]: ./top_k_predictions/15.jpg "Predictions 15"
 
 ---
 
@@ -438,9 +455,24 @@ Here are the results of the prediction:
 
 The model was able to correctly guess 14 of the 15 traffic signs, which gives an accuracy of 93.3%. This compares bit less favorably to the accuracy on the test set of 99.6%. However it should be noted that most of the traffic signs I have selected are defaced or otherwise not clear and difficult to classify.
 
+Calculating the accuracy on these fifteen German traffic sign images found on the web might not give a comprehensive overview of how well the model is performing. One way to do a more detailed analysis of model performance is by looking at predictions in more detail. For this, I have calculated the [precision and recall](https://en.wikipedia.org/wiki/Precision_and_recall) for each traffic sign type from the test set. Following diagrams shows precision and recall for each traffic sign type.
+
+Recall:
+
+![recall.jpg][image25]
+
+Precision:
+
+![precision.jpg][image24]
+
+
+From these results, it is clear that model has a low recall for pedestrians signs. In other words, the model has trouble predicting on pedestrians signs. Probably we should generate more augment data for the pedestrians signs to help model generalize on pedestrians signs.
+
+Also we can see that the model has low precision for pedestrians and no vehicles signs. In other words, if the model says something is a pedestrians or a no vehicles sign, we're not very sure that it really is a pedestrians or a no vehicles sign respectively. One possible reason for this could be due to the fact that there are some other types of traffic signs that are very similar to these types of traffic signs. Probably we could increase the model size a bit and see if things could be improved.
+
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-The code for making predictions on my final model is located in the 25th cell of the Ipython notebook.
+The code for making predictions on my final model is located in the 26th cell of the Ipython notebook.
 
 Here I will discuss about how the model is predicting on few notable images.
 
@@ -454,6 +486,8 @@ For the first image, the model has relatively low confidence that this is a no e
 | 0.011851982	      			| Yield					 				|
 | 0.0117532695				    | No passing for vehicles over 3.5 metric tons						|
 
+![prediction_1.jpg][image26]
+
 For the second image also, the model has relatively low confidence that this is a road work sign (probability of 0.652), however the image does contain a road work sign even though it is considerably covered with snow. The top five softmax probabilities were
 
 | Probability         	|     Prediction	        					| 
@@ -464,6 +498,8 @@ For the second image also, the model has relatively low confidence that this is 
 | 0.023628656	      			| Right-of-way at the next intersection				 				|
 | 0.019095229				    | General caution						|
 
+![prediction_2.jpg][image27]
+
 Similarly for third image also model has very low confidence that this is a general caution sign (probability of 0.423), yet the image contains a general caution sign. The top five softmax probabilities were
 
 | Probability         	|     Prediction	        					| 
@@ -473,6 +509,8 @@ Similarly for third image also model has very low confidence that this is a gene
 | 0.075514					| Pedestrians											|
 | 0.03221925	      			| Go straight or left				 				|
 | 0.01742872				    | Traffic signals						|
+
+![prediction_3.jpg][image28]
 
 Here one thing noticeable is that model has more or less equal score for the right of way at the next intersection sign as second most probable prediction. In fact these two signs are very much equal to each other graphically.
 
@@ -491,6 +529,8 @@ This is evident in fourth image, the model is quite certain that this is a road 
 | 0.0008095841	      			| Stop				 				|
 | 0.00044973224				    | General caution						|
 
+![prediction_4.jpg][image29]
+
 
 For the fifth image, the model is quite certain that this is a no entry sign (probability of 0.999), and the image does contain a no entry sign. The top five softmax probabilities were
 
@@ -501,6 +541,8 @@ For the fifth image, the model is quite certain that this is a no entry sign (pr
 | 2.2975235e-05			| Slippery road			                				        |
 | 2.0329826e-05			| Children crossing                                      |
 | 1.9321327e-05	    | Wild animals crossing           							|
+
+![prediction_5.jpg][image30]
 
 This holds true for the case of sixth image where model is quite certain that it is ahead only sign (probability of 0.995), and the image does contain a ahead only sign.
 
@@ -515,6 +557,8 @@ For the eighth image, the model has low confidence in predicting that this is a 
 | 0.0099358  			| Go straight or left                                      |
 | 0.009465913        	    | Ahead only            							|
 
+![prediction_8.jpg][image33]
+
 It should be noted that this sign is quite defaced and indeed the 2nd prediction of the model is a stop sign with somewhat close confidence score (probability of 0.357).
 
 
@@ -527,6 +571,8 @@ For the ninth image also the model has very low confidence in predicting that it
 | 0.16230176 			| Keep left       						        |
 | 0.07043269 			| Keep right                                      |
 | 0.034394156        	    | Pedestrians            							|
+
+![prediction_9.jpg][image34]
 
 So despite the fact that the sign is defaced to the point that it is harder to identify by even human eye and easily could be mistaken to any of roundabout mandatory or keep left/right signs the model have somehow predicted the sign correctly. Here it seems that model is relying on overall background color to predict the class of signs and might have predicted the sign merely by coincidence.
 
@@ -541,6 +587,8 @@ For the tenth image, the model is quite certain that this is a children crossing
 | 0.00018733578			| Speed limit (100km/h)                               |
 | 0.0001830899 	    | Speed limit (30km/h)     						|
 
+![prediction_10.jpg][image35]
+
 So despite being covered with some shadows, model is robust enough to predict the sign type correctly here.
 
 
@@ -554,6 +602,8 @@ For the eleventh image, the model has a moderate confidence that this is a turn 
 | 0.03675174			| Priority road                               |
 | 0.028343054 	    | Ahead only     						|
 
+![prediction_11.jpg][image36]
+
 
 For the twelfth image, the model is quite certain that this is a speed limit (70km/h) sign (probability of 0.987), and the image does contain a speed limit (70km/h) sign. The top five softmax probabilities were
 
@@ -564,6 +614,8 @@ For the twelfth image, the model is quite certain that this is a speed limit (70
 | 0.001769929			| Pedestrians          				        |
 | 0.00092452194			| Speed limit (20km/h)                               |
 | 0.000903425    	    | Dangerous curve to the left        							|
+
+![prediction_12.jpg][image37]
 
 So it is evident that even when a particular feature is completely absent or muted model is still capable of predicting based on the remaining features. It is quite interesting that the missing feature is indeed a common one to most of the classes that are confused. But it should be noted that a neural network may not necessarily create features as we look it but could be rather more complex higher dimensional features that are created by mix and match of segments of different segments of features we would normally see. (See below for a visualization of CNN activations.)
 
@@ -577,6 +629,8 @@ For the thirteenth image, the model is quite certain that this is a general caut
 | 0.00061260955			| No entry							    |
 | 0.0005754149 			| Traffic signals                                  |
 | 0.00035156435	    | Road narrows on the right          						|
+
+![prediction_13.jpg][image38]
 
 As mentioned before convolutional neural networks are robust to rotations or transformations in image features. So model has no trouble classifying image 13 and 14 even though they are somewhat skewed due to the angle they were captured.
 
