@@ -86,13 +86,13 @@ As a preprocessing step, I normalized the image data to range of [0,1] using min
 
 I did not used any other preprocessing like grayscalling or histogram normalization etc. Instead as proposed in ["Systematic evaluation of CNN advances on the ImageNet"](https://arxiv.org/pdf/1606.02228.pdf), I used a mini network at the beginning of my model to learn a transformation via convolution. While original paper suggests using 1x1 convolutions, I used 3x3 and 1x1 convolutions respectively at this step which gave better results.
 
-I decided to generate additional data because it helps to prevent model from overfitting on training set since samples were not equally distributed between each classes in the original training set. 
+I decided to generate additional data because it helps to prevent model from over fitting on training set since samples were not equally distributed between each classes in the original training set. 
 
 To add more data to the data set, I used the following techniques because they would generate as much as legitimate samples without introducing unrealistic image effects to the training samples. 
 
 First I used flipping of existing samples of symmetrical signs wherever possible. For this I used the flipping method available at, https://navoshta.com/traffic-signs-classification/#flipping 
 
-Then I balanced the data between classes by cloning existing samples so that there are at least 2000 samples per each class. At each iteration of training a randomly selected portion of these were perturbed using random translations, rotations and perspective transformations. In this step I also used border reflect method to prevent introducing high contrast unwanted features and keep the border areas consistent with original images. The basic idea of this approach is to create "infinite" augmented training data set by generating new data during the training epoch. When training data is always changing, the network will be less prone to overfitting. However at the same time it is necessary to make sure that the data change is not too big so that it won't cause "jumps" in the training loss.
+Then I balanced the data between classes by cloning existing samples so that there are at least 2000 samples per each class. At each iteration of training a randomly selected portion of these were perturbed using random translations, rotations and perspective transformations. In this step I also used border reflect method to prevent introducing high contrast unwanted features and keep the border areas consistent with original images. The basic idea of this approach is to create "infinite" augmented training data set by generating new data during the training epoch. When training data is always changing, the network will be less prone to over fitting. However at the same time it is necessary to make sure that the data change is not too big so that it won't cause "jumps" in the training loss.
 
 Here is an example of an original image and an augmented image:
 
@@ -145,7 +145,7 @@ My final model consisted of the following layers:
 
 Instead of any hand tuned image preprocessing step, I have used a Mini-network for learning color space transformations as described in https://arxiv.org/pdf/1606.02228.pdf . One noticeable exception is that while original paper suggests using two 1x1 convolutions consecutively, I have instead used 3x3 and 1x1 convolutions respectively.
 
-Following diagram shows the model architecture of Mini-Net used for learning colorspace transformations at the beginning of the model.  
+Following diagram shows the model architecture of Mini-Net used for learning color space transformations at the beginning of the model.  
 ![preconv_fig.png][image2]
 
 This was followed by a DenseNet model as proposed by Gao Huang et al in https://arxiv.org/pdf/1608.06993.pdf However I have reduced the number of layers in each dense block to 4 and growth rate to 24 to make it a more manageable sized network.
@@ -168,14 +168,14 @@ For my network I have used dense blocks with 4 layers and growth rate of 24.
 
 To train the model, I used a MomentumOptimizer with momentum 0.9 and Nesterov Momentum. Final hyper parameter settings that was used are:
 
-* learning rate: 0.05, 0.02, 0.005, 0.002, 0.0005 and 0.0002 at epoch 1, 3, 6, 8, 11 and 16 respectively.
+* Learning rate: 0.05, 0.02, 0.005, 0.002, 0.0005 and 0.0002 at epoch 1, 3, 6, 8, 11 and 16 respectively.
 * batch size: 16
 * epochs: 20
 * L2 normalization beta: 1e-3
 * dropout layers keep probability: 0.80
 * random training sample generator keep probability: 0.40
 
-While I used MomentumOptimizer with ```momentum=0.9``` and truncated normal initializer with ```mu``` and ```sigma``` for weights. I did not tuned these hyperparameters for brevity.
+While I used MomentumOptimizer with ```momentum=0.9``` and truncated normal initializer with ```mu``` and ```sigma``` for weights. I did not tuned these hyper parameters for brevity.
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
@@ -190,11 +190,11 @@ For this first I had chosen the LeNet-5 implementation shown in the [classroom](
 
 However this architecture could only achieve 0.918 accuracy of validation set after global histogram equalization.
 
-So I evaluated the performace of Sermanet LeCun model as described in http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf but with comparably similar network size. This increased validation set accuracy to 0.927. Then I increased model complexity by increasing number of features to 22 and 38 in first and second convolutional layer respectively. I also used additional hidden layer of size 120 between flattened and output layers of the network. This achieved 0.94 validation accuracy. These changes helped to prevent the network from underfitting by increasing training set accuracy from below 0.986 to 0.998. However at this stage the network started overfitting the training data.
+So I evaluated the performance of Sermanet LeCun model as described in http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf but with comparably similar network size. This increased validation set accuracy to 0.927. Then I increased model complexity by increasing number of features to 22 and 38 in first and second convolutional layer respectively. I also used additional hidden layer of size 120 between flattened and output layers of the network. This achieved 0.94 validation accuracy. These changes helped to prevent the network from under fitting by increasing training set accuracy from below 0.986 to 0.998. However at this stage the network started over fitting the training data.
 
-While I was searching for measures to prevent overfitting, my mentor suggested LeNet-5 based network with following parameters.  
+While I was searching for measures to prevent over fitting, my mentor suggested LeNet-5 based network with following parameters.  
 CNN Layers: 4 Hidden (2 CNN + 2 MatMul)  
-Layer 1: Convolutional + MaxPool. The output is 14 x 14 x 16 Activation : RELU  
+Layer 1: Convolutional + MaxPool. The output is 14 x 14 x 16 Activation: RELU  
 Layer 2: Convolutional + Max Pool. The output is 5 x 5 x 16  
 Layer 3: Matmul. The output is 256 x 64  
 Layer 4: Matmul. The output is 64 x 43  
@@ -204,15 +204,15 @@ conv filter depth = 16
 Optimizer: Adam Optimizer with learning rate of 0.001  
 While I have tried similar networks before moving into Sermanet LeCun model, what I observed here is that reducing batch size from 128 to 16 could increase the validation set accuracy for same model in this case. And increasing the feature size of convolutional layers to 16, 40 respectively on this model I could obtain 0.951 validation accuracy.
 
-To prevent networks from overfitting I introduced dropout and L2 regularization and I tested these approaches in both Sermanet and LeNet-5 architectures of moderate sizes. Dropout layers helps network to generalize by preventing the model from being too much relying on a particular feature at hidden layers while L2 regularization penalizes very large weights (And thus again preventing model being too inclined for particular features) This gives me validation accuracy of 0.966 and 0.973 for LeNet-5 and Sermanet/LeCun models respectively.
+To prevent networks from over fitting I introduced dropout and L2 regularization and I tested these approaches in both Sermanet and LeNet-5 architectures of moderate sizes. Dropout layers helps network to generalize by preventing the model from being too much relying on a particular feature at hidden layers while L2 regularization penalizes very large weights (And thus again preventing model being too inclined for particular features) This gives me validation accuracy of 0.966 and 0.973 for LeNet-5 and Sermanet/LeCun models respectively.
 
 While doing these tuning of LeNet-5 and Sermanet models I kept exploring more literature on deep learning based image classifications. Based on the paper at https://arxiv.org/pdf/1606.02228.pdf I tried out using a mini network at the beginning of the model to learn the color space transformations instead of using a image preprocessing step to normalize the color validations between images. This yielded 0.971 accuracy with LeNet-5 model - on par or better than using histogram equalized image preprocessing.
 
 Then I employed batch normalization to further reduce overfitting. This yielded 0.976, 0.983 and 0.976 for LeNet-5, LeNet-5 with Mini-Net and Sermanet models respectively.
 
-Further readings introduced me to DenseNet model which is an state of the art network proposed recently[[2]](https://arxiv.org/pdf/1608.06993.pdf). Even at first attempt of using moderate size DenseNet employing 4 layers with growth rate of 12 at each block resulted in 0.992 validation accuracy with histogram equalization for image preprocessing. However combining DenseNet with Mini-Net for learning colorspace transformations did not yield results on par with histogram equalization based image preprocessing for same model. But after tuning the models a bit, it was on par with or better than LeNet-5 based models.
+Further readings introduced me to DenseNet model which is a state of the art network proposed recently [[2]](https://arxiv.org/pdf/1608.06993.pdf). Even at first attempt of using moderate size DenseNet employing 4 layers with growth rate of 12 at each block resulted in 0.992 validation accuracy with histogram equalization for image preprocessing. However combining DenseNet with Mini-Net for learning color space transformations did not yield results on par with histogram equalization based image preprocessing for same model. But after tuning the models a bit, it was on par with or better than LeNet-5 based models.
 
-To further reduce overfitting I decided to generate additional data as described above. This increased the validation accuracy of all the models. At this point I used CLAHE for any models that were using histogram equalization for image preprocessing. After these changes following were the standings of each model.  
+To further reduce over fitting I decided to generate additional data as described above. This increased the validation accuracy of all the models. At this point I used CLAHE for any models that were using histogram equalization for image preprocessing. After these changes following were the standings of each model.  
 LeNet-5 with CLAHE 0.985  
 Sermanet with CLAHE 0.982  
 DenseNet with CLAHE 0.993  
@@ -221,11 +221,11 @@ DenseNet with Mini-Net (Transnet+DenseNet) 0.998
 
 Then I tuned following hyper parameters individually in a similar fashion to problem 3 in [TensorFlow lab](https://github.com/udacity/CarND-TensorFlow-Lab/blob/master/lab.ipynb). Here I would select a parameter to tune and keeping all other parameters constant I would train the network and choose the value that gives the best accuracy. Ranges of parameters used for tuning are as follows. To reduce the computing time for this I used original training data set instead balanced data set. However at each epoch a randomly selected portion of the training data set was randomly transformed to generate new samples.
 ```
-perturb_rates = [0.8,0.6,0.4,0.2] # 1.0-keep_radio for random perturbations of train set.
-batch_sizes = [16,32,64,128]
-learn_rates = [0.5,0.1,0.05,0.01] # initial learn_rates in case of MomentumOptimizer
-l2_beta = [1e-2,1e-3,1e-4,1e-5]
-dropouts = [0.5,0.4,0.2,0.1] # 1.0-keep_prob of dropout layers.
+perturb_rates = [0.8, 0.6, 0.4, 0.2] # 1.0-keep_radio for random perturbations of train set.
+batch_sizes = [16, 32, 64, 128]
+learn_rates = [0.5, 0.1, 0.05, 0.01] # initial learn_rates in case of MomentumOptimizer
+l2_beta = [1e-2, 1e-3, 1e-4, 1e-5]
+dropouts = [0.5, 0.4, 0.2, 0.1] # 1.0-keep_prob of dropout layers.
 ```
 
 Finally I trained each network for 20 epochs using selected parameter set for each model on the extended data set I generated earlier using data augmentation. This gives me following set of validation accuracy for each model.  
@@ -235,16 +235,16 @@ DenseNet with CLAHE 0.997
 LeNet-5 with Mini-Net (Transnet+LeNet) 0.989  
 DenseNet with Mini-Net (Transnet+DenseNet) 0.998  
 
-So I decided to use DenseNet model with Mini-Net for colorspace transformation for my final evaluation which gives a test accuracy of 0.9960.
+So I decided to use DenseNet model with Mini-Net for color space transformation for my final evaluation which gives a test accuracy of 0.9960.
 
 ### Log:
 
 2017-09-05
 - MinMax Scaling [0,1]  
-Standard LeNet with 3 input channels and 43 neurones at output layer.  
+Standard LeNet with 3 input channels and 43 neurons at output layer.  
 Validation accuracy: 0.884 at 10 EPOCHS
 - Grayscale & MinMax Scaling [0,1]  
-Standard LeNet with 43 neurones at output layer  
+Standard LeNet with 43 neurons at output layer  
 Validation accuracy: 0.902 at 10 EPOCHS
 
 2017-09-06
@@ -290,7 +290,7 @@ Validation Accuracy: 0.973 at 10 EPOCHS
  
 2017-09-21  
 Image preprocessing using convnets. (RGB->conv1x1x10->conv1x1x3) (Transnet+Lenet)  
-- Standard LeNet with 43 neurones at output layer  
+- Standard LeNet with 43 neurons at output layer  
 Validation accuracy: 0.896 at 10 EPOCHS
 - LeNet-5 with 16 and 40 convolution filters at stage 1 and 2 respectively and 256 and 84 hidden units respectively in fully connected layers  
 Validation accuracy: 0.954 at 10 EPOCHS
@@ -311,7 +311,7 @@ Validation Accuracy: 0.976 at 10 EPOCHS
 
 2017-09-24
 - Densenet model with layer size 4.  
-Initial convolution feature size 16. with growth rate 12.  
+Initial convolution feature size 16. With growth rate 12.  
 Validation Accuracy: 0.992 at 10 EPOCHS
 - Convnet based image preprocessing (Transnet+Densenet)  
 L2 beta=0.0001  
@@ -324,10 +324,10 @@ Set kernel size of initial convolution of densenet to 5.
 Validation Accuracy: 0.984 at 10 EPOCHS  
 --  
 - Transnet+Lenet model.  
-Generating additional training data by flipping and random perturbations of translations,rotations and perspective transform.  
+Generating additional training data by flipping and random perturbations of translations, rotations and perspective transform.  
 Validation Accuracy: 0.988 at 10 EPOCHS
 - LeNet-5 based model with grayscale images.  
-Generating additional training data by flipping and random perturbations of translations,rotations and perspective transform.  
+Generating additional training data by flipping and random perturbations of translations, rotations and perspective transform.  
 CLAHE instead histogram equalization. (With ```tileGridSize=(4,4)```)  
 Validation Accuracy: 0.985 at 10 EPOCHS  
 --  
@@ -338,12 +338,12 @@ Validation Accuracy: 0.982 at 10 EPOCHS
 
 2017-09-25
 - Transnet+Densenet model.  
-Generating additional training data by flipping and random perturbations of translations,rotations and perspective transform.  
+Generating additional training data by flipping and random perturbations of translations, rotations and perspective transform.  
 Validation Accuracy: 0.998 at 10 EPOCHS
 
 2017-10-01
 - Densenet model.  
-Generating additional training data by flipping and random perturbations of translations,rotations and perspective transform.  
+Generating additional training data by flipping and random perturbations of translations, rotations and perspective transform.  
 Validation Accuracy: 0.993 at 10 EPOCHS
 - Provided training set size only with perturbations.  
 ```keep_prob: 0.8, perturbation_ratio:0.4 (keep_ratio:0.6), learning_rate(initial): 0.01, l2_beta:1e-4, BATCH_SIZE: 32```  
@@ -395,35 +395,35 @@ Validation Accuracy: 0.998 at 20 EPOCHS
 
 Here are fifteen German traffic signs that I found on the web:
 
-![1.jpg][image6] source: http://c8.alamy.com/comp/EBNMNC/creeping-plants-overgrowing-the-traffic-sign-no-through-traffic!-germany-EBNMNC.jpg
+![1.jpg][image6] Source: http://c8.alamy.com/comp/EBNMNC/creeping-plants-overgrowing-the-traffic-sign-no-through-traffic!-germany-EBNMNC.jpg
 
-![2.jpg][image7] source: http://c8.alamy.com/comp/D1F88X/a-construction-sign-is-set-up-in-front-of-a-dormant-construction-site-D1F88X.jpg
+![2.jpg][image7] Source: http://c8.alamy.com/comp/D1F88X/a-construction-sign-is-set-up-in-front-of-a-dormant-construction-site-D1F88X.jpg
 
-![3.jpg][image8] source: http://media.gettyimages.com/photos/german-traffic-signs-picture-id459380825
+![3.jpg][image8] Source: http://media.gettyimages.com/photos/german-traffic-signs-picture-id459380825
 
-![4.jpg][image9] source: https://thumbs.dreamstime.com/z/work-progress-road-sign-triangle-isolated-cloudy-background-germany-47409527.jpg
+![4.jpg][image9] Source: https://thumbs.dreamstime.com/z/work-progress-road-sign-triangle-isolated-cloudy-background-germany-47409527.jpg
 
-![5.jpg][image10] source: http://l450v.alamy.com/450v/de6k01/berlin-germany-causing-modified-shield-prohibition-of-the-entrance-de6k01.jpg
+![5.jpg][image10] Source: http://l450v.alamy.com/450v/de6k01/berlin-germany-causing-modified-shield-prohibition-of-the-entrance-de6k01.jpg
 
-![6.jpg][image11] ![7.jpg][image12] source: http://c7.alamy.com/zooms/b7b51e215a7548f3860b0f1bd283dd1d/house-and-sign-in-friedrichshain-part-of-berlin-ffdbtp.jpg
+![6.jpg][image11] ![7.jpg][image12] Source: http://c7.alamy.com/zooms/b7b51e215a7548f3860b0f1bd283dd1d/house-and-sign-in-friedrichshain-part-of-berlin-ffdbtp.jpg
 
-![8.jpg][image13] ![9.jpg][image14] source: https://yooniqimages.blob.core.windows.net/yooniqimages-data-storage-resizedimagefilerepository/List/21604/ed272c0d-35a6-43ed-b06d-1e29a439f3ab/YooniqImages_216047253.jpg
+![8.jpg][image13] ![9.jpg][image14] Source: https://yooniqimages.blob.core.windows.net/yooniqimages-data-storage-resizedimagefilerepository/List/21604/ed272c0d-35a6-43ed-b06d-1e29a439f3ab/YooniqImages_216047253.jpg
 
-![10.jpg][image15] source: https://yooniqimages.blob.core.windows.net/yooniqimages-data-storage-resizedimagefilerepository/List/10661/482612d4-1ae4-437b-90fa-1bec45259e87/YooniqImages_106616776.jpg
+![10.jpg][image15] Source: https://yooniqimages.blob.core.windows.net/yooniqimages-data-storage-resizedimagefilerepository/List/10661/482612d4-1ae4-437b-90fa-1bec45259e87/YooniqImages_106616776.jpg
 
-![11.jpg][image16] source: https://www.google.com/maps/@50.113776,8.6695646,3a,15y,16.54h,89.9t/data=!3m6!1e1!3m4!1sHkFlTrQY84TiYzuOAvZulQ!2e0!7i13312!8i6656
+![11.jpg][image16] Source: https://www.google.com/maps/@50.113776,8.6695646,3a,15y,16.54h,89.9t/data=!3m6!1e1!3m4!1sHkFlTrQY84TiYzuOAvZulQ!2e0!7i13312!8i6656
 
-![12.jpg][image17] source: http://2.bp.blogspot.com/-qV7w3mSOFFk/UVvsmwO1ExI/AAAAAAAABEw/wGlze-LebSI/s1600/DSC_0583.jpg
+![12.jpg][image17] Source: http://2.bp.blogspot.com/-qV7w3mSOFFk/UVvsmwO1ExI/AAAAAAAABEw/wGlze-LebSI/s1600/DSC_0583.jpg
 
-![13.jpg][image18] source: https://yooniqimages.blob.core.windows.net/yooniqimages-data-storage-resizedimagefilerepository/Detail/22024/7b7eb9cb-562e-417f-9c53-a3a4326b05f5/YooniqImages_220245051.jpg
+![13.jpg][image18] Source: https://yooniqimages.blob.core.windows.net/yooniqimages-data-storage-resizedimagefilerepository/Detail/22024/7b7eb9cb-562e-417f-9c53-a3a4326b05f5/YooniqImages_220245051.jpg
 
-![14.jpg][image19] source: https://yooniqimages.blob.core.windows.net/yooniqimages-data-storage-resizedimagefilerepository/Detail/20794/58d78295-8499-4943-92a7-b6432a320c4b/YooniqImages_207943278.jpg
+![14.jpg][image19] Source: https://yooniqimages.blob.core.windows.net/yooniqimages-data-storage-resizedimagefilerepository/Detail/20794/58d78295-8499-4943-92a7-b6432a320c4b/YooniqImages_207943278.jpg
 
-![15.jpg][image20] source: https://thumb7.shutterstock.com/display_pic_with_logo/10787/10787,1248774798,4/stock-photo-seventy-kilometers-per-hour-speed-limit-on-german-country-road-34364929.jpg
+![15.jpg][image20] Source: https://thumb7.shutterstock.com/display_pic_with_logo/10787/10787,1248774798,4/stock-photo-seventy-kilometers-per-hour-speed-limit-on-german-country-road-34364929.jpg
 
 The first image might be difficult to classify because it is considerably covered from overgrown plants. Similarly images 2 and 3 also can be difficult to classify since they are covered with snow.
 
-In addition to natural causes, traffic signs might also have defaced by people. image 5 and 6 are examples of such cases where small patches of foreign items are sticked on the sign. However example 8 and 9 are some extreme cases where signs are defaced to the point of being almost unrecognizable.
+In addition to natural causes, traffic signs might also have defaced by people. Image 5 and 6 are examples of such cases where small patches of foreign items are sticked on the sign. However example 8 and 9 are some extreme cases where signs are defaced to the point of being almost unrecognizable.
 
 Signs could also become difficult to classify due to being covered by shadows as in example 10 or as in example 11, being partially covered due to other objects in front of it when the sign is captured.
 
@@ -517,7 +517,7 @@ Here one thing noticeable is that model has more or less equal score for the rig
 So it is safe to say that model is capable of handling cases where traffic sign is considerably covered with other objects. However we can see that confidence of the model is very low in such situations (It's quite amusing to see for the second image, model has come up with bumpy road as the 3rd guess which indeed would be the case with road works. And in fact road work sign contains a similar symbol to bumpy road symbol as part of it.)
 
 
-However at this stage it should be stressed that the uncertainty of model predictions are due to the features of traffic sign being partially covered. Where as model can confidently predict when traffic sign is more clear.
+However at this stage it should be stressed that the uncertainty of model predictions are due to the features of traffic sign being partially covered. Whereas model can confidently predict when traffic sign is clearer.
 
 This is evident in fourth image, the model is quite certain that this is a road work sign (probability of 0.991), and the image does contain a road work sign. The top five softmax probabilities were
 
@@ -547,7 +547,7 @@ For the fifth image, the model is quite certain that this is a no entry sign (pr
 This holds true for the case of sixth image where model is quite certain that it is ahead only sign (probability of 0.995), and the image does contain a ahead only sign.
 
 
-For the eighth image, the model has low confidence in predicting that this is a priority road sign (probability of 0.541), how ever the image contains a seriously defaced stop sign. The top five softmax probabilities were
+For the eighth image, the model has low confidence in predicting that this is a priority road sign (probability of 0.541), however the image contains a seriously defaced stop sign. The top five softmax probabilities were
 
 | Probability         	|     Prediction	        					        | 
 |:---------------------:|:-----------------------------------------------------:| 
@@ -647,9 +647,9 @@ Trained network:
 
 From these visualizations it seems that neural network use some specific features in the images like color band around the traffic sign (For example see feature map 7) as well as some higher dimensional features comprising of parts of simple shapes and features represent in images. (For example see feature map 22)
 
-When a particular feature from an image is not present, model could still perform with the remaining features of the image. For example when outer band of the above traffic sign is not present due to aging, the layers that solely depend on that feature seem to get less excited (For example see feature 7) where as layers that either works as a combination of features or layers containing other features would contribute to make the model more robust. (For example see feature map 8, 9 and 18)
+When a particular feature from an image is not present, model could still perform with the remaining features of the image. For example when outer band of the above traffic sign is not present due to aging, the layers that solely depend on that feature seem to get less excited (For example see feature 7) whereas layers that either works as a combination of features or layers containing other features would contribute to make the model more robust. (For example see feature map 8, 9 and 18)
 
-Trained network with a feature missing:  
+Trained network for an image with a feature missing:  
 ![visualization_cnn_12.jpg][image23]
 
 However it should be noted that it's quite hard to explain how or why a neural network works with very complex models and images. Above is based on best explanation based on observations of the visualization of network.
